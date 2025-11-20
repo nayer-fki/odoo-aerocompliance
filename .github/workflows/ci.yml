@@ -19,28 +19,17 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Install requirements for security tools
-      run: |
-        pip install semgrep
+    - name: Install Semgrep
+      run: pip install semgrep
 
-    # -------------------------
-    # SEMGREP (SAST)
-    # -------------------------
     - name: Run Semgrep scan
-      run: |
-        semgrep --config auto .
+      run: semgrep --config auto .
       continue-on-error: true
 
-    # -------------------------
-    # TRIVY FS (File System Scan)
-    # -------------------------
-    - name: Install Trivy
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wget
-        wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.48.0_Linux-64bit.deb
-        sudo dpkg -i trivy_0.48.0_Linux-64bit.deb
-
-    - name: Run Trivy FS scan
-      run: |
-        trivy fs --exit-code 0 --no-progress .
+    - name: Run Trivy FS Scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: fs
+        ignore-unfixed: true
+        severity: HIGH,CRITICAL
+      continue-on-error: true
