@@ -1,17 +1,28 @@
-# Docker volumes
+# -------- Docker volumes (NE JAMAIS METTRE DANS GIT) --------
 volumes/
-pgadmin-data/
 postgres-data/
+pgadmin-data/
 
-# Compiled Python
-*.pyc
+# -------- Python compiled files --------
 __pycache__/
+*.pyc
+*.pyo
 
-# VS Code
-.vscode/
-
-# Odoo runtime files
+# -------- Logs --------
 *.log
 
-# System
+# -------- Editors / IDE --------
+.vscode/
+.idea/
+
+# -------- System files --------
+.DS_Store
+Thumbs.db
+
+# -------- Local env / secrets --------
+.env
+*.env
+
+# -------- Temporary / test folders --------
 a/
+tmp/
