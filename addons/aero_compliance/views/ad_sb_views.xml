@@ -1,0 +1,51 @@
+<!-- ad_sb_views.xml -->
+
+<odoo>
+
+    <!-- LIST (TREE) VIEW -->
+    <record id="view_aero_ad_sb_tree" model="ir.ui.view">
+        <field name="name">aero.ad_sb.tree</field>
+        <field name="model">aero.ad_sb</field>
+        <field name="arch" type="xml">
+            <tree string="AD / SB">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_aero_ad_sb_form" model="ir.ui.view">
+        <field name="name">aero.ad_sb.form</field>
+        <field name="model">aero.ad_sb</field>
+        <field name="arch" type="xml">
+            <form string="AD / SB">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_aero_ad_sb_search" model="ir.ui.view">
+        <field name="name">aero.ad_sb.search</field>
+        <field name="model">aero.ad_sb</field>
+        <field name="arch" type="xml">
+            <search string="Search AD / SB">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION: AD / SB -->
+    <record id="action_aero_ad_sb" model="ir.actions.act_window">
+        <field name="name">AD / SB</field>
+        <field name="res_model">aero.ad_sb</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_aero_ad_sb_tree"/>
+        <field name="search_view_id" ref="view_aero_ad_sb_search"/>
+    </record>
+
+</odoo>

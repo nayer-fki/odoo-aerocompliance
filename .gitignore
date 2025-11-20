@@ -1,0 +1,17 @@
+# Docker volumes
+volumes/
+pgadmin-data/
+postgres-data/
+
+# Compiled Python
+*.pyc
+__pycache__/
+
+# VS Code
+.vscode/
+
+# Odoo runtime files
+*.log
+
+# System
+a/

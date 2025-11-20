@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  web:
+    image: odoo:17.0
+    container_name: odoo17_web
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    volumes:
+      # addons du projet
+      - ../addons:/mnt/extra-addons
+      # fichier de config Odoo
+      - ../config/odoo.conf:/etc/odoo/odoo.conf
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+
+  db:
+    image: postgres:15
+    container_name: odoo17_db
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+    volumes:
+      # volume postgres déplacé تحت volumes/
+      - ../volumes/postgres-data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: odoo17_pgadmin
+    depends_on:
+      - db
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    volumes:
+      # volume pgadmin déplacé تحت volumes/
+      - ../volumes/pgadmin-data:/var/lib/pgadmin

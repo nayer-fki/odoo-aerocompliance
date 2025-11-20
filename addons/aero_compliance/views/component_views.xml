@@ -1,0 +1,104 @@
+<!-- component_views.xml -->
+<odoo>
+
+    <!-- LIST (TREE) VIEW -->
+    <record id="view_aero_component_tree" model="ir.ui.view">
+        <field name="name">aero.component.tree</field>
+        <field name="model">aero.component</field>
+        <field name="arch" type="xml">
+            <tree string="Components">
+                <field name="display_name"/>
+                <field name="aircraft_id"/>
+                <field name="install_date"/>
+                <field name="llp_limit_hours"/>
+                <field name="llp_limit_cycles"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_aero_component_form" model="ir.ui.view">
+        <field name="name">aero.component.form</field>
+        <field name="model">aero.component</field>
+        <field name="arch" type="xml">
+            <form string="Component">
+
+                <!-- 🔘 زر Add Component في الـ header -->
+                <header>
+                    <button name="action_new_component"
+                            type="object"
+                            string="Add Component"
+                            class="oe_secondary"/>
+                </header>
+
+                <sheet>
+                    <group>
+                        <group string="Identity">
+                            <field name="pn"/>
+                            <field name="sn"/>
+                            <field name="display_name" readonly="1"/>
+                        </group>
+                        <group string="Installation">
+                            <field name="aircraft_id"/>
+                            <field name="install_date"/>
+                        </group>
+                    </group>
+
+                    <group string="Usage &amp; LLP">
+                        <group>
+                            <field name="hours_since_new"/>
+                            <field name="cycles_since_new"/>
+                        </group>
+                        <group>
+                            <field name="llp_limit_hours"/>
+                            <field name="llp_limit_cycles"/>
+                        </group>
+                    </group>
+
+                    <group string="Remaining Life">
+                        <group>
+                            <field name="remaining_hours" readonly="1"/>
+                            <field name="remaining_cycles" readonly="1"/>
+                            <field name="status" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Certificate">
+                            <field name="certificate" filename="certificate_filename"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_aero_component_search" model="ir.ui.view">
+        <field name="name">aero.component.search</field>
+        <field name="model">aero.component</field>
+        <field name="arch" type="xml">
+            <search string="Search Components">
+                <field name="pn"/>
+                <field name="sn"/>
+                <field name="aircraft_id"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_aircraft"
+                            string="Aircraft"
+                            context="{'group_by':'aircraft_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_aero_component" model="ir.actions.act_window">
+        <field name="name">Components</field>
+        <field name="res_model">aero.component</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_aero_component_tree"/>
+        <field name="search_view_id" ref="view_aero_component_search"/>
+    </record>
+
+</odoo>

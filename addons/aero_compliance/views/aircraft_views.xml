@@ -1,0 +1,95 @@
+<!-- addons/aero_compliance/views/aircraft_views.xml -->
+<odoo>
+    <!-- LIST (TREE) VIEW -->
+    <record id="view_aero_aircraft_tree" model="ir.ui.view">
+        <field name="name">aero.aircraft.tree</field>
+        <field name="model">aero.aircraft</field>
+        <field name="arch" type="xml">
+            <tree string="Aircraft">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="entry_into_service"/>
+                <field name="total_hours"/>
+                <field name="total_cycles"/>
+                <field name="compliance_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_aero_aircraft_form" model="ir.ui.view">
+        <field name="name">aero.aircraft.form</field>
+        <field name="model">aero.aircraft</field>
+        <field name="arch" type="xml">
+            <form string="Aircraft">
+                <header>
+                    <button name="action_open_compliance"
+                            type="object"
+                            string="Open Compliance"
+                            class="oe_highlight"/>
+
+                    <!-- زر Add Aircraft يستعمل action_add_aircraft -->
+                    <button name="action_add_aircraft"
+                            type="object"
+                            string="Add Aircraft"
+                            class="oe_secondary"/>
+                </header>
+
+                <sheet>
+                    <group>
+                        <group string="Identity">
+                            <field name="name"/>
+                            <field name="type"/>
+                            <field name="entry_into_service"/>
+                        </group>
+                        <group string="Usage">
+                            <field name="total_hours"/>
+                            <field name="total_cycles"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Components">
+                            <field name="component_ids">
+                                <tree editable="bottom">
+                                    <field name="display_name"/>
+                                    <field name="remaining_hours"/>
+                                    <field name="remaining_cycles"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_aero_aircraft_search" model="ir.ui.view">
+        <field name="name">aero.aircraft.search</field>
+        <field name="model">aero.aircraft</field>
+        <field name="arch" type="xml">
+            <search string="Search Aircraft">
+                <field name="name" string="Tail Number"/>
+                <field name="type"/>
+                <filter name="with_components"
+                        string="With Components"
+                        domain="[('component_ids','!=',False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_type"
+                            string="Type/Model"
+                            context="{'group_by': 'type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_aero_aircraft" model="ir.actions.act_window">
+        <field name="name">Aircraft</field>
+        <field name="res_model">aero.aircraft</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_aero_aircraft_tree"/>
+        <field name="search_view_id" ref="view_aero_aircraft_search"/>
+    </record>
+</odoo>

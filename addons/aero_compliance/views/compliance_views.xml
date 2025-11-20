@@ -1,0 +1,60 @@
+<!-- compliance_views.xml -->
+
+<odoo>
+
+    <!-- LIST (TREE) VIEW -->
+    <record id="view_aero_compliance_tree" model="ir.ui.view">
+        <field name="name">aero.compliance.tree</field>
+        <field name="model">aero.compliance</field>
+        <field name="arch" type="xml">
+            <tree string="Compliance">
+                <field name="aircraft_id"/>
+                <field name="component_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_aero_compliance_form" model="ir.ui.view">
+        <field name="name">aero.compliance.form</field>
+        <field name="model">aero.compliance</field>
+        <field name="arch" type="xml">
+            <form string="Compliance">
+                <sheet>
+                    <group>
+                        <!-- لازم aircraft_id يكون في الview خاطر يستعملوه في domain متاع component_id -->
+                        <field name="aircraft_id" invisible="1"/>
+                        <field name="component_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_aero_compliance_search" model="ir.ui.view">
+        <field name="name">aero.compliance.search</field>
+        <field name="model">aero.compliance</field>
+        <field name="arch" type="xml">
+            <search string="Search Compliance">
+                <field name="aircraft_id"/>
+                <field name="component_id"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_aircraft"
+                            string="Aircraft"
+                            context="{'group_by': 'aircraft_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_aero_compliance" model="ir.actions.act_window">
+        <field name="name">Compliance</field>
+        <field name="res_model">aero.compliance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_aero_compliance_tree"/>
+        <field name="search_view_id" ref="view_aero_compliance_search"/>
+    </record>
+
+</odoo>

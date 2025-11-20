@@ -1,0 +1,35 @@
+<!-- menu.xml -->
+
+<odoo>
+    <!-- Root app menu -->
+    <menuitem id="menu_aero_root"
+              name="Aero Compliance"
+              sequence="10"/>
+
+    <!-- Submenu: Operations -->
+    <menuitem id="menu_aero_operations_root"
+              name="Operations"
+              parent="menu_aero_root"
+              sequence="10"/>
+
+    <!-- Aircraft -->
+    <menuitem id="menu_aero_aircraft_root"
+              name="Aircraft"
+              parent="menu_aero_operations_root"
+              action="action_aero_aircraft"
+              sequence="10"/>
+
+    <!-- Components -->
+    <menuitem id="menu_aero_component_root"
+              name="Components"
+              parent="menu_aero_operations_root"
+              action="action_aero_component"
+              sequence="20"/>
+
+    <!-- AD / SB -->
+    <menuitem id="menu_aero_ad_sb_root"
+              name="AD / SB"
+              parent="menu_aero_operations_root"
+              action="action_aero_ad_sb"
+              sequence="30"/>
+</odoo>

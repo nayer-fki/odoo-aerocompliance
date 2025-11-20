@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_aero_aircraft_user,aero.aircraft user,model_aero_aircraft,base.group_user,1,1,1,0
+access_aero_aircraft_manager,aero.aircraft manager,model_aero_aircraft,base.group_user,1,1,1,1
+access_aero_aircraft_admin,aero.aircraft admin,model_aero_aircraft,base.group_system,1,1,1,1
+
+access_aero_component_user,aero.component user,model_aero_component,base.group_user,1,1,1,0
+access_aero_component_manager,aero.component manager,model_aero_component,base.group_user,1,1,1,1
+access_aero_component_admin,aero.component admin,model_aero_component,base.group_system,1,1,1,1
+
+access_aero_ad_sb_user,aero.ad_sb user,model_aero_ad_sb,base.group_user,1,1,1,0
+access_aero_ad_sb_manager,aero.ad_sb manager,model_aero_ad_sb,base.group_user,1,1,1,1
+access_aero_ad_sb_admin,aero.ad_sb admin,model_aero_ad_sb,base.group_system,1,1,1,1
+
+access_aero_compliance_user,aero.compliance user,model_aero_compliance,base.group_user,1,1,1,0
+access_aero_compliance_manager,aero.compliance manager,model_aero_compliance,base.group_user,1,1,1,1
+access_aero_compliance_admin,aero.compliance admin,model_aero_compliance,base.group_system,1,1,1,1
