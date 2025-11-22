@@ -9,6 +9,12 @@ on:
 env:
   IMAGE_NAME: odoo-aerocompliance
 
+# ⬇⬇⬇ important for GHCR push ⬇⬇⬇
+permissions:
+  contents: read      # y9ra el repo
+  packages: write     # yzid / ypush packages (GHCR)
+# ⬆⬆⬆ important for GHCR push ⬆⬆⬆
+
 jobs:
   # ============================
   # 1) CI : Analyse + Build + Scan + Push Image
