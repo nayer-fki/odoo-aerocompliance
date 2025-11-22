@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI-CD Pipeline
 
 on:
   push:
@@ -6,30 +6,123 @@ on:
   pull_request:
     branches: ["main"]
 
+env:
+  IMAGE_NAME: odoo-aerocompliance
+
 jobs:
-  ci-checks:
+  # ============================
+  # 1) CI : Analyse + Build + Scan + Push Image
+  # ============================
+  ci-build-scan:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      # 1. Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      # 2. Python (Semgrep)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    - name: Install Semgrep
-      run: pip install semgrep
+      # 3. Install Semgrep
+      - name: Install Semgrep
+        run: pip install semgrep
 
-    - name: Run Semgrep scan
-      run: semgrep --config auto .
-      continue-on-error: true
+      # 4. Run Semgrep (SAST)
+      - name: Run Semgrep scan
+        run: semgrep --config auto .
+        continue-on-error: true
 
-    - name: Run Trivy FS Scan
-      uses: aquasecurity/trivy-action@master
-      with:
-        scan-type: fs
-        ignore-unfixed: true
-        severity: HIGH,CRITICAL
-      continue-on-error: true
+      # 5. Trivy FS (scan filesystem + deps)
+      - name: Run Trivy FS Scan
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          ignore-unfixed: true
+          severity: HIGH,CRITICAL
+        continue-on-error: true
+
+      # 6. Login to GitHub Container Registry (GHCR)
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 7. Set IMAGE_TAG (dispo fi kol steps b3ad)
+      - name: Set image tag
+        run: |
+          IMAGE_TAG=ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
+      # 8. Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t $IMAGE_TAG .
+
+      # 9. Push Docker image to GHCR
+      - name: Push Docker image
+        run: |
+          docker push $IMAGE_TAG
+
+      # 10. Install Trivy CLI (pour image scan)
+      - name: Install Trivy CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+
+      # 11. Trivy Image Scan (sur l'image buildée)
+      - name: Run Trivy Image Scan
+        run: |
+          trivy image --severity HIGH,CRITICAL --ignore-unfixed $IMAGE_TAG
+        continue-on-error: true
+
+
+  # ============================
+  # 2) CD : Deploy / Update on Kubernetes (Minikube) - TEMP OFF
+  # ============================
+  cd-deploy:
+    if: false   # 🔴 désactivé pour l'instant (manich 3andna cluster encore)
+    runs-on: ubuntu-latest
+    needs: ci-build-scan   # ما يبدأش حتى تكمل CI
+
+    steps:
+      # 1. Checkout باش نلقى ملفات k8s/ في الrunner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configure kubectl (نستعمل secret فيه kubeconfig)
+      - name: Configure kubectl
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG_DATA }}" > ~/.kube/config
+
+      # 3. Set IMAGE_TAG (نفس اللي استعملناه في job الأول)
+      - name: Set image tag
+        run: |
+          IMAGE_TAG=ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
+      # 4. Deploy / Update manifests
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/
+
+      # 5. (اختياري) تحديث صورة الـ Deployment Odoo
+      - name: Update Odoo deployment image
+        run: |
+          kubectl set image deployment/odoo-deployment odoo-container=$IMAGE_TAG --record
+
+      # 6. (اختياري) Check état des pods
+      - name: Check rollout status
+        run: |
+          kubectl rollout status deployment/odoo-deployment
