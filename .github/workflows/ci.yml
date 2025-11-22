@@ -49,7 +49,7 @@ jobs:
         run: black --check .
 
       - name: Run Ruff
-        run: ruff .
+        run: ruff check .
 
       # -----------------------------
       # 5. Run Tests (pytest)
