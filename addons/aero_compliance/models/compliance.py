@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
 import logging
+
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -13,12 +14,12 @@ class AeroCompliance(models.Model):
     _order = "date_planned asc, id asc"
 
     name = fields.Char("Title", required=True, default="Compliance Task", tracking=True)
-    aircraft_id = fields.Many2one(
-        "aero.aircraft", string="Aircraft", tracking=True
-    )
+    aircraft_id = fields.Many2one("aero.aircraft", string="Aircraft", tracking=True)
     component_id = fields.Many2one(
-        "aero.component", string="Component", tracking=True,
-        domain="[('aircraft_id', '=', aircraft_id)]"
+        "aero.component",
+        string="Component",
+        tracking=True,
+        domain="[('aircraft_id', '=', aircraft_id)]",
     )
     ad_sb_id = fields.Many2one("aero.ad_sb", string="AD/SB", tracking=True)
 
@@ -67,14 +68,14 @@ class AeroCompliance(models.Model):
             # لازم إمّا aircraft **أو** component (واحد فقط)
             if bool(rec.aircraft_id) == bool(rec.component_id):
                 raise ValidationError(
-                    _(
-                        "Select exactly one target: either an Aircraft or a Component."
-                    )
+                    _("Select exactly one target: either an Aircraft or a Component.")
                 )
 
     # --------- Cron placeholder (يمشي مع data/cron.xml) ---------
     def _cron_remind_due(self):
         """Placeholder آمن: يكتب لوج فقط. نجمو لاحقًا نضيفوا Activities."""
         due = self.search([("state", "!=", "done"), ("date_planned", "!=", False)])
-        _logger.info("[AeroCompliance] Cron check: %s records with a planned date.", len(due))
+        _logger.info(
+            "[AeroCompliance] Cron check: %s records with a planned date.", len(due)
+        )
         return True

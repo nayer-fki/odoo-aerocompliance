@@ -1,6 +1,5 @@
 # addons/aero_compliance/models/aircraft.py
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo import _, api, fields, models
 
 
 class AeroAircraft(models.Model):

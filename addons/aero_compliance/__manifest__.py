@@ -1,4 +1,4 @@
-#addons/aero_compliance/__manifest__.py
+# addons/aero_compliance/__manifest__.py
 # -*- coding: utf-8 -*-
 {
     "name": "AeroCompliance",
@@ -9,19 +9,16 @@
     "website": "https://example.com",
     "license": "LGPL-3",
     "depends": ["base", "maintenance", "stock", "hr", "project", "account"],
-    'data': [
-    'security/ir.model.access.csv',
-
-    # VIEWS (actions + vues)
-    'views/aircraft_views.xml',
-    'views/component_views.xml',
-    'views/ad_sb_views.xml',
-    'views/compliance_views.xml',
-
-    # MENUS (en DERNIER)
-    'views/menu.xml',
-],
-
+    "data": [
+        "security/ir.model.access.csv",
+        # VIEWS (actions + vues)
+        "views/aircraft_views.xml",
+        "views/component_views.xml",
+        "views/ad_sb_views.xml",
+        "views/compliance_views.xml",
+        # MENUS (en DERNIER)
+        "views/menu.xml",
+    ],
     "installable": True,
     "application": True,
 }

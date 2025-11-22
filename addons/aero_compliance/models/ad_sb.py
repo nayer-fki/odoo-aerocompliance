@@ -1,6 +1,6 @@
-#models/ad_sb.py
+# models/ad_sb.py
 # -*- coding: utf-8 -*-
-from odoo import models, fields
+from odoo import fields, models
 
 
 class AeroAdSb(models.Model):

@@ -1,7 +1,6 @@
 # addons/aero_compliance/models/component.py
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo import _, api, fields, models
 
 
 class AeroComponent(models.Model):
@@ -125,9 +124,8 @@ class AeroComponent(models.Model):
             r.remaining_cycles = rem_c
 
             if r.llp_limit_hours or r.llp_limit_cycles:
-                expired = (
-                    (r.llp_limit_hours and rem_h <= 0)
-                    or (r.llp_limit_cycles and rem_c <= 0)
+                expired = (r.llp_limit_hours and rem_h <= 0) or (
+                    r.llp_limit_cycles and rem_c <= 0
                 )
                 if expired:
                     r.status = "expired"
